@@ -132,6 +132,7 @@ class StudentManager:
             self.cursor.execute("DELETE FROM Students")
             self.conn.commit()
             self.cursor.execute("VACUUM")
+            self.connect()
             return True
         except sqlite3.Error as e:
             return False
