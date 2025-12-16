@@ -72,6 +72,9 @@ class StudentManager:
                 (msv,)
             )
             results = self.cursor.fetchall()
+            for i in range(len(results)):
+                results[i] = list(results[i])
+                results[i][0] = i + 1
             return results
         except sqlite3.Error as e:
             return []
@@ -121,6 +124,9 @@ class StudentManager:
         try:
             self.cursor.execute("SELECT id, msv, ten, lop, gt, dstt, tdtt, tthcm FROM Students ORDER BY id")
             results = self.cursor.fetchall()
+            for i in range(len(results)):
+                results[i] = list(results[i])
+                results[i][0] = i + 1
             return results
         except sqlite3.Error as e:
             return []
