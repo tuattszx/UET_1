@@ -52,7 +52,7 @@ class MainApp:
         self.root.title("Quản Lý Sinh Viên")
         self.root.config(bg="skyblue")
         self.root.resizable(0, 0)
-        labelTitle = tk.Label(self.root, text= "Quản Lý Sinh Viên", font=('Arial', 14, 'bold'), bg='skyblue')
+        labelTitle = tk.Label(self.root, text= "Quản Lý Sinh Viên", font=('Arial', 17, 'bold'), bg='skyblue')
         labelTitle.pack(side=tk.TOP, pady=10)
         
     def showFrame(self, frameShow):
@@ -203,7 +203,7 @@ class MainApp:
         backButton = tk.Button(buttonContainer,
                                 text="Trở lại",
                                 font= self.FONT,
-                                command=lambda: self.showFrame(self.mainFrame),
+                                command=lambda: [self.clearSearch(), self.showFrame(self.mainFrame)],
                                 bg='lightblue',
                                 fg='black',
                                 width=15) 
@@ -220,7 +220,10 @@ class MainApp:
     def createUpdateStudentForm(self):
         formFrame = tk.Frame(self.updateStudentFrame, bg='white', padx=10, pady=10)
         formFrame.pack(pady=20)
-        
+        tableContainer = tk.Frame(self.updateStudentFrame, bg='white')
+        tableContainer.pack(pady=10, padx=10, fill='both', expand=True)
+        tk.Label(tableContainer, text="Lưu ý: MSV bắt buộc phải nhập, các phần còn lại có thể nhập hoặc không", fg='yellow', bg='grey').pack(pady=10) 
+
         for i, field_name in enumerate(self.fields):
             label = tk.Label(formFrame, text=field_name, bg='white', anchor='w', width=15, font= self.FONT)
             label.grid(row=i + 1, column=0, pady=5, sticky='w')
@@ -264,7 +267,6 @@ class MainApp:
                     messagebox.showinfo(message= "Thêm Sinh Viên Thành Công!")
                     for entry in self.addStudentEntries.values():
                         entry.delete(0, tk.END)
-                    #self.showFrame(self.mainFrame) 
                 else:
                     messagebox.showerror(message= "MSV Đã Tồn Tại!")
             else:
@@ -281,10 +283,14 @@ class MainApp:
         for entry in self.deleteStudentEntries.values():
             entry.delete(0, tk.END)
     
-    def searchSubmit(self):
+    def clearSearch(self):
         for widget in self.searchStudentFrame.winfo_children():
-            if widget.winfo_class() == 'Frame' and widget.winfo_name() == 'result_container':
+            if widget.winfo_name() == 'result_container':
                 widget.destroy()
+        for entry in self.searchStudentEntries.values():
+            entry.delete(0, tk.END)
+
+    def searchSubmit(self):
         msv = self.searchStudentEntries["MSV"].get()
         if not msv:
             messagebox.showerror(message= "Vui lòng nhập MSV!")
@@ -304,7 +310,6 @@ class MainApp:
             for row in results:
                 self.searchTree.insert('', tk.END, values=row)
             self.searchTree.pack(fill='x', expand=True)
-            
             messagebox.showinfo(message= "Tìm Kiếm Thành Công!")
     
     def checkScoreUpdate(self, score):
